@@ -13,7 +13,6 @@ export default function Login() {
     setErrorMessage('')
 
     try {
-      // Send the login request to the backend and save the returned token.
       await api.login({ email, password })
       navigate('/dashboard')
     } catch (error) {
@@ -22,16 +21,28 @@ export default function Login() {
   }
 
   return (
-    <div className="container" style={{ maxWidth: 420, marginTop: 40 }}>
-      <div className="card">
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 8 }}>
-          <input placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          <input placeholder="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+    <div className="auth-shell">
+      <div className="auth-hero">
+        <div className="brand-pill">🌊 BlueWave Aquaculture</div>
+        <h1>Run your farm operations with clarity.</h1>
+        <p>Track inventory, suppliers, approvals and forecasts in one polished workspace designed for fast decisions.</p>
+        <ul className="feature-list">
+          <li>Live inventory visibility</li>
+          <li>Smarter procurement planning</li>
+          <li>Shared team workflow insights</li>
+        </ul>
+      </div>
+
+      <div className="auth-card">
+        <h2>Welcome back</h2>
+        <p className="muted">Sign in to continue managing your aquaculture supply chain.</p>
+        <form onSubmit={handleSubmit}>
+          <input className="input" placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} />
+          <input className="input" placeholder="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
           {errorMessage ? <p className="muted">{errorMessage}</p> : null}
           <button className="btn" type="submit">Login</button>
         </form>
-        <p className="muted" style={{ marginTop: 12 }}>Don't have an account? <Link to="/signup">Signup</Link></p>
+        <p className="muted" style={{ marginTop: 12 }}>Don't have an account? <Link to="/signup">Create one</Link></p>
       </div>
     </div>
   )

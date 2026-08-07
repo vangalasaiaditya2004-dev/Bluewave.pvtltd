@@ -12,6 +12,9 @@ const links = [
   {to:'/suppliers',label:'Suppliers',icon:<FiUsers/>},
   {to:'/reports',label:'Reports',icon:<FiBarChart2/>},
   {to:'/notifications',label:'Notifications',icon:<FiBell/>},
+  {to:'/approvals',label:'Approvals',icon:<FiBarChart2/>},
+  {to:'/users',label:'Users',icon:<FiUsers/>},
+  {to:'/audit-logs',label:'Audit Logs',icon:<FiSettings/>},
   {to:'/profile',label:'Profile',icon:<FiUser/>},
   {to:'/settings',label:'Settings',icon:<FiSettings/>},
 ]

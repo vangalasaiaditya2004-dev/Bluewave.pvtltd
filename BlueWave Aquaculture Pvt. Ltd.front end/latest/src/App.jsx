@@ -10,6 +10,9 @@ import Reports from './pages/Reports'
 import Notifications from './pages/Notifications'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
+import Approvals from './pages/Approvals'
+import Users from './pages/Users'
+import AuditLogs from './pages/AuditLogs'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import './styles/global.css'
@@ -22,7 +25,7 @@ function ProtectedRoute({ children }) {
 function App() {
   const location = useLocation()
   const isAuthenticated = Boolean(localStorage.getItem('token'))
-  const showShell = ['/dashboard', '/inventory', '/forecast', '/purchase', '/suppliers', '/reports', '/notifications', '/profile', '/settings'].includes(location.pathname)
+  const showShell = ['/dashboard', '/inventory', '/forecast', '/purchase', '/suppliers', '/reports', '/notifications', '/profile', '/settings', '/approvals', '/users', '/audit-logs'].includes(location.pathname)
 
   return (
     <div>
@@ -43,6 +46,9 @@ function App() {
             <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/approvals" element={<ProtectedRoute><Approvals /></ProtectedRoute>} />
+            <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+            <Route path="/audit-logs" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>

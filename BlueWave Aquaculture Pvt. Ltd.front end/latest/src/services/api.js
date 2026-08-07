@@ -3,12 +3,13 @@
 
 // In production, the frontend can use a deployed backend URL.
 // If none is provided, the app uses a same-origin /api path.
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const API_BASE_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${API_BASE_URL}${normalizedPath}`, {
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -16,7 +17,10 @@ async function request(path, options = {}) {
     ...options,
   });
 
-  const data = await response.json().catch(() => ({}));
+  const contentType = response.headers.get("content-type") || "";
+  const data = contentType.includes("application/json")
+    ? await response.json().catch(() => ({}))
+    : { message: await response.text().catch(() => "") };
 
   if (!response.ok) {
     throw new Error(data.message || "Request failed");
@@ -26,7 +30,7 @@ async function request(path, options = {}) {
 }
 
 async function login({ email, password }) {
-  const data = await request("/api/auth/login", {
+  const data = await request("/auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
@@ -43,7 +47,7 @@ async function login({ email, password }) {
 }
 
 async function signup({ fullName, email, password, role_id }) {
-  const data = await request("/api/auth/register", {
+  const data = await request("/auth/register", {
     method: "POST",
     body: JSON.stringify({
       name: fullName,
@@ -70,14 +74,52 @@ function getUser() {
 }
 
 async function getProfile() {
-  const data = await request("/api/auth/profile");
+  const data = await request("/auth/profile");
   localStorage.setItem("user", JSON.stringify(data.data));
   return data;
 }
 
 async function fetchDashboard() {
-  const data = await request("/api/reports/inventory");
+  const data = await request("/reports/inventory");
   return data.data;
+}
+
+async function fetchInventory() {
+  const data = await request("/inventory");
+  return data.data || [];
+}
+
+async function createInventoryItem(payload) {
+  const data = await request("/inventory", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  return data.data;
+}
+
+async function fetchSuppliers() {
+  const data = await request("/suppliers");
+  return data.data || [];
+}
+
+async function createSupplier(payload) {
+  const data = await request("/suppliers", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  return data.data;
+}
+
+async function fetchDemandForecasts() {
+  const data = await request("/reports/demand-forecasts");
+  return data.data || [];
+}
+
+async function fetchFinancialReports() {
+  const data = await request("/reports/financial");
+  return data.data || [];
 }
 
 export default {
@@ -87,4 +129,10 @@ export default {
   getUser,
   getProfile,
   fetchDashboard,
+  fetchInventory,
+  createInventoryItem,
+  fetchSuppliers,
+  createSupplier,
+  fetchDemandForecasts,
+  fetchFinancialReports,
 };
