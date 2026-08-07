@@ -1,7 +1,9 @@
 // Simple API service using the browser Fetch API.
 // This connects the React app to the Node.js backend running on port 5000.
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// In production, the frontend can use a deployed backend URL.
+// If none is provided, the app uses a same-origin /api path.
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");

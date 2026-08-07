@@ -2,6 +2,8 @@
 
 const jwt = require("jsonwebtoken");
 
+const jwtSecret = process.env.JWT_SECRET || "bluewave_secret_key";
+
 function generateToken(user) {
   // Store only safe user details in the token. Never store the password.
   return jwt.sign(
@@ -11,7 +13,7 @@ function generateToken(user) {
       role_id: user.role_id,
       role: user.role,
     },
-    process.env.JWT_SECRET,
+    jwtSecret,
     {
       expiresIn: "1d",
     }
