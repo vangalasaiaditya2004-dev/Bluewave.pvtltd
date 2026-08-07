@@ -1,0 +1,4 @@
+.navbar{height:64px;background:var(--card);display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #eef2f7}
+.logo{font-weight:700;color:var(--primary)}
+.btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
+.muted{color:#6b7280;text-decoration:none}
