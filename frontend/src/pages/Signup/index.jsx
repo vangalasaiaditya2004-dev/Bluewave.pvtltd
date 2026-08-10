@@ -21,7 +21,7 @@ function Signup() {
 
     try {
       await api.signup({ fullName, email, password, role_id: Number(roleId) })
-      navigate('/dashboard')
+      navigate('/login')
     } catch (error) {
       setErrorMessage(error.message || 'Signup failed')
     }
