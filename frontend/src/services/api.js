@@ -36,6 +36,9 @@ async function request(path, options = {}) {
   }
 
   if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Session expired or unauthorized. Please log in again.");
+    }
     throw new Error(data.message || `Request failed with status ${response.status}`);
   }
 
