@@ -3,7 +3,8 @@
 
 // In production, the frontend can use a deployed backend URL.
 // Normalize base URL so that it always targets the /api namespace
-const rawApiUrl = (import.meta.env.VITE_API_URL || "/api").trim().replace(/\/$/, "");
+const envApiUrl = typeof import.meta !== "undefined" && import.meta?.env ? import.meta.env.VITE_API_URL : "";
+const rawApiUrl = (envApiUrl || "/api").trim().replace(/\/$/, "");
 const API_BASE_URL = rawApiUrl ? (rawApiUrl.endsWith("/api") ? rawApiUrl : `${rawApiUrl}/api`) : "/api";
 
 async function request(path, options = {}) {
