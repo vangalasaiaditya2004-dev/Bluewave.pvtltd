@@ -2,12 +2,17 @@
 // This connects the React app to the Node.js backend running on port 5000.
 
 // In production, the frontend can use a deployed backend URL.
-// If none is provided, the app uses a same-origin /api path.
-const API_BASE_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
+// Normalize base URL so that it always targets the /api namespace
+const rawApiUrl = (import.meta.env.VITE_API_URL || "/api").trim().replace(/\/$/, "");
+const API_BASE_URL = rawApiUrl ? (rawApiUrl.endsWith("/api") ? rawApiUrl : `${rawApiUrl}/api`) : "/api";
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  let normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  if (normalizedPath.startsWith("/api/")) {
+    normalizedPath = normalizedPath.replace(/^\/api/, "");
+  }
 
   const response = await fetch(`${API_BASE_URL}${normalizedPath}`, {
     headers: {
@@ -18,12 +23,20 @@ async function request(path, options = {}) {
   });
 
   const contentType = response.headers.get("content-type") || "";
-  const data = contentType.includes("application/json")
-    ? await response.json().catch(() => ({}))
-    : { message: await response.text().catch(() => "") };
+  let data;
+  if (contentType.includes("application/json")) {
+    data = await response.json().catch(() => ({}));
+  } else {
+    const rawText = await response.text().catch(() => "");
+    const isHtml = rawText.includes("<!DOCTYPE") || rawText.includes("<html");
+    const msg = isHtml
+      ? "Unable to reach backend API. Please check your VITE_API_URL or server deployment."
+      : (rawText || "Request failed");
+    data = { message: msg };
+  }
 
   if (!response.ok) {
-    throw new Error(data.message || "Request failed");
+    throw new Error(data.message || `Request failed with status ${response.status}`);
   }
 
   return data;
@@ -124,7 +137,10 @@ async function fetchFinancialReports() {
 
 const api = {
   login,
+  signon: login,
+  signin: login,
   signup,
+  register: signup,
   logout,
   getUser,
   getProfile,

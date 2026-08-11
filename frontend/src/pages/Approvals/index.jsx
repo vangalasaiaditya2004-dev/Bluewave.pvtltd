@@ -45,8 +45,8 @@ function Approvals() {
             style={{ width: '100%', minHeight: 100, marginBottom: 8 }}
           />
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn" type="button" onClick={() => handleDecision(approvals[0].id, 'approve')}>Approve</button>
-            <button className="btn" type="button" onClick={() => handleDecision(approvals[0].id, 'reject')} style={{ background: '#b53f3f' }}>Reject</button>
+            <button className="btn" type="button" disabled={!approvals.length} onClick={() => approvals[0] && handleDecision(approvals[0].id, 'approve')}>Approve</button>
+            <button className="btn" type="button" disabled={!approvals.length} onClick={() => approvals[0] && handleDecision(approvals[0].id, 'reject')} style={{ background: '#b53f3f' }}>Reject</button>
           </div>
         </div>
       </div>

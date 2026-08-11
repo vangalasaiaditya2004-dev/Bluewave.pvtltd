@@ -23,18 +23,41 @@ const errorMiddleware = require("./middleware/errorMiddleware");
 const app = express();
 
 // Allow requests from other origins, such as a React frontend.
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // Let Express read JSON request bodies.
 app.use(express.json());
 
-// Simple test route.
-app.get("/", (req, res) => {
-  res.send("BlueWave Backend Running...");
+// Health check / status route for root and /api endpoints
+app.get(["/", "/api"], (req, res) => {
+  res.json({ success: true, message: "BlueWave Backend Running..." });
 });
 
-// Main API routes.
+// Import controllers directly for fallback binding
+const authController = require("./controllers/authController");
+
+// Main API routes with aliases for authentication endpoints.
 app.use("/api/auth", authRoutes);
+app.post("/api/login", authController.login);
+app.post("/api/signon", authController.login);
+app.post("/api/signin", authController.login);
+app.post("/api/signup", authController.register);
+app.post("/api/register", authController.register);
+
+// Additional mounts without /api prefix for maximum compatibility.
+app.use("/auth", authRoutes);
+app.post("/login", authController.login);
+app.post("/signon", authController.login);
+app.post("/signin", authController.login);
+app.post("/signup", authController.register);
+app.post("/register", authController.register);
+
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/reports", reportRoutes);

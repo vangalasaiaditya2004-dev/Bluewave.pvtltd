@@ -36,7 +36,12 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signin" element={<Login />} />
+            <Route path="/signon" element={<Login />} />
+            <Route path="/sign-in" element={<Login />} />
+            <Route path="/sign-on" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/register" element={<Signup />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/inventory" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
             <Route path="/forecast" element={<ProtectedRoute><Forecast /></ProtectedRoute>} />

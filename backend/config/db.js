@@ -5,13 +5,18 @@ const fs = require("fs");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 
-// Build paths safely so they work on Windows, macOS, and Linux.
-const databaseDir = path.join(__dirname, "..", "database");
+// Build paths safely so they work on Windows, macOS, Linux, and Vercel Serverless (/tmp).
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const databaseDir = isServerless ? "/tmp" : path.join(__dirname, "..", "database");
 const databasePath = path.join(databaseDir, "bluewave.db");
-const schemaPath = path.join(databaseDir, "schema.sql");
+const schemaPath = path.join(__dirname, "..", "database", "schema.sql");
 
 // Make sure the database folder exists before opening the file.
-fs.mkdirSync(databaseDir, { recursive: true });
+try {
+  fs.mkdirSync(databaseDir, { recursive: true });
+} catch (err) {
+  console.warn("Could not create database dir, using fallback /tmp:", err.message);
+}
 
 // Open the SQLite database. If bluewave.db does not exist, sqlite3 creates it.
 const sqliteConnection = new sqlite3.Database(databasePath, (error) => {
