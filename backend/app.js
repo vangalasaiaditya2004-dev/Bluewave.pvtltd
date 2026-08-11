@@ -15,6 +15,7 @@ const authRoutes = require("./routes/authRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
 const supplierRoutes = require("./routes/supplierRoutes");
 const reportRoutes = require("./routes/reportRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 // Import error middleware. It catches errors passed with next(error).
 const errorMiddleware = require("./middleware/errorMiddleware");
@@ -61,6 +62,8 @@ app.post("/register", authController.register);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/ai", aiRoutes);
+app.use("/ai", aiRoutes);
 
 // Friendly response for unknown routes.
 app.use((req, res) => {

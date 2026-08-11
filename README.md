@@ -17,6 +17,7 @@ BlueWave Optimizer is a beginner-friendly full-stack aquaculture supply chain an
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: SQLite (`sqlite3`)
+- **AI Integration**: OpenAI JavaScript SDK (`openai`)
 - **Security & Auth**: `bcrypt`, `jsonwebtoken` (JWT), `cors`, `dotenv`
 
 ---
@@ -24,7 +25,8 @@ BlueWave Optimizer is a beginner-friendly full-stack aquaculture supply chain an
 ## ✨ Features
 
 - **Authentication**: User Signup & Login with password hashing (`bcrypt`) and JWT session security.
-- **Dashboard Overview**: Summary of total inventory items, low-stock warnings, and financial valuation.
+- **Real-Time AI Insights**: Database-driven demand analysis, inventory risk warnings, and procurement recommendations powered by OpenAI.
+- **Dashboard Overview**: Summary of total inventory items, low-stock warnings, financial valuation, and AI Insights.
 - **Inventory Management**: Add and view stock levels, unit costs, categories, and reorder alerts.
 - **Supplier Directory**: Manage supplier profiles, emails, phone numbers, and addresses.
 - **Demand Forecasts & Purchase Planning**: Automated recommendations based on reorder thresholds.
@@ -39,10 +41,10 @@ BlueWave Optimizer is a beginner-friendly full-stack aquaculture supply chain an
 BlueWave-Optimizer/
 ├── backend/
 │   ├── config/          # SQLite database connection & schema initialization
-│   ├── controllers/     # API request handlers (auth, inventory, suppliers, reports)
+│   ├── controllers/     # API request handlers (auth, inventory, suppliers, reports, ai)
 │   ├── database/        # SQLite database file and schema SQL
 │   ├── middleware/      # Auth JWT verification and error handlers
-│   ├── routes/          # Express route definitions
+│   ├── routes/          # Express route definitions (auth, inventory, suppliers, reports, ai)
 │   ├── utils/           # JWT token generator helper
 │   ├── app.js           # Server entry point
 │   ├── package.json
@@ -94,6 +96,16 @@ The frontend dev server runs on `http://localhost:5173`.
 
 ---
 
+## 🤖 How AI Insights Work
+
+1. The frontend dashboard sends an authenticated request to `GET /api/ai/insights`.
+2. The backend queries real inventory records, low-stock items, supplier details, and demand forecasts from SQLite.
+3. A single structured prompt payload is sent to OpenAI (`gpt-4o-mini`).
+4. OpenAI returns structured JSON containing demand insights, inventory risks, procurement recommendations, and risk levels.
+5. If `OPENAI_API_KEY` is missing or API limits are reached, the system computes structured data-driven insights locally without crashing.
+
+---
+
 ## 🌐 Deployment Instructions
 
 ### Backend (Deploy on Render)
@@ -105,6 +117,10 @@ The frontend dev server runs on `http://localhost:5173`.
    - `PORT`: `5000`
    - `JWT_SECRET`: `<your-random-secret-key>`
    - `CORS_ORIGIN`: `<your-deployed-frontend-url>`
+   - `OPENAI_API_KEY`: `<your-openai-api-key>`
+
+> [!NOTE]
+> Render's default web service filesystem is ephemeral. SQLite will re-initialize on server restarts unless a persistent disk volume is mounted at `/database`.
 
 ### Frontend (Deploy on Vercel / Netlify)
 1. Import your project into [Vercel](https://vercel.com/) or [Netlify](https://netlify.com/).

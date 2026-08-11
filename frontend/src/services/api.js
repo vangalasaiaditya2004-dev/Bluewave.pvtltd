@@ -135,6 +135,11 @@ async function fetchFinancialReports() {
   return data.data || [];
 }
 
+async function fetchAIInsights() {
+  const data = await request("/ai/insights");
+  return data.data;
+}
+
 const api = {
   login,
   signon: login,
@@ -151,6 +156,7 @@ const api = {
   createSupplier,
   fetchDemandForecasts,
   fetchFinancialReports,
+  fetchAIInsights,
 };
 
 export default api;
